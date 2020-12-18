@@ -1,0 +1,53 @@
+version: '3.5'
+
+services:
+  app:
+    image: jamirperoba/laravel_php74_nginx_fpm:3.1
+    container_name: laravel-queue
+    restart: always
+    ports:
+      - 8091:80
+    volumes:
+      - ./:/usr/share/nginx
+    networks:
+      - laravel-queue-network
+    depends_on:
+      - database
+      - redis
+
+  database:
+    build: ./.docker/database
+    container_name: laravel-queue-database
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: "postgres"
+    ports:
+      - "15433:5432"
+    volumes:
+      - laravel-queue-database:/var/lib/postgresql/data
+    networks:
+      - laravel-queue-network
+
+  redis:
+    image: redis:alpine
+    container_name: laravel-queue-redis
+    expose:
+      - 6379
+    networks:
+      - laravel-queue-network
+  mailhog:
+    image: 'mailhog/mailhog:latest'
+    container_name: laravel-queue-mailhog
+    ports:
+      - 1025:1025
+      - 8025:8025
+    networks:
+      - laravel-queue-network
+
+networks:
+  laravel-queue-network:
+    name: laravel-queue-network
+    driver: bridge
+
+volumes:
+  laravel-queue-database:
