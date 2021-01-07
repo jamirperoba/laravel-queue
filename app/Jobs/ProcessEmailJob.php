@@ -16,14 +16,19 @@ class ProcessEmailJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $tries = 5;
+    public $maxExceptions = 3;
+    public $timeout = 120;
+    private $total;
+
     /**
      * Create a new job instance.
      *
-     * @return void
+     * @param $total
      */
-    public function __construct()
+    public function __construct($total)
     {
-        //
+        $this->total = $total;
     }
 
     /**
@@ -33,11 +38,16 @@ class ProcessEmailJob implements ShouldQueue
      */
     public function handle()
     {
-        $users = User::limit(10000)->get();
+        $users = User::limit($this->total)->get();
 
         foreach ($users as $user) {
             Notification::route('mail',$user->email)
                 ->notify(new SendNotification());
         }
+    }
+
+    public function tags()
+    {
+        return ['SendEmailUser'];
     }
 }

@@ -69,4 +69,16 @@ class SendNotification extends Notification implements ShouldQueue
             //
         ];
     }
+
+    /**
+     * Determine which queues should be used for each notification channel.
+     *
+     * @return array
+     */
+    public function viaQueues()
+    {
+        return [
+            'mail' => 'emails',
+        ];
+    }
 }

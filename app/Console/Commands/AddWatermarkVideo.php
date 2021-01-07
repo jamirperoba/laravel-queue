@@ -2,24 +2,27 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\ProcessEmailJob;
+use App\Jobs\AddWatermarkVideoJob;
 use Illuminate\Console\Command;
+use FFMpeg\Filters\Video\VideoFilters;
+use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
+use ProtoneMedia\LaravelFFMpeg\Filters\WatermarkFactory;
 
-class SendEmail extends Command
+class AddWatermarkVideo extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'email:send {total}';
+    protected $signature = 'videos:add-watermark';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Send emails {total}';
+    protected $description = 'Add watermark in video';
 
     /**
      * Create a new command instance.
@@ -38,8 +41,11 @@ class SendEmail extends Command
      */
     public function handle()
     {
-        $total = ((int)$this->argument('total'));
+        AddWatermarkVideoJob::dispatch();
+    }
 
-        ProcessEmailJob::dispatch($total)->onQueue('emails');
+    public function tags()
+    {
+        return ['CovertVideo'];
     }
 }

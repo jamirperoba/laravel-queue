@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
   app:
-    image: jamirperoba/laravel_php74_nginx_fpm:3.1
+    build: ./.docker/app
     container_name: laravel-queue
     restart: always
     ports:
