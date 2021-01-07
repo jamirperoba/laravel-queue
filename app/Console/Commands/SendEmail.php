@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Jobs\ProcessEmailJob;
+use App\Models\User;
 use Illuminate\Console\Command;
 
 class SendEmail extends Command
@@ -40,6 +41,10 @@ class SendEmail extends Command
     {
         $total = ((int)$this->argument('total'));
 
-        ProcessEmailJob::dispatch($total)->onQueue('emails');
+        $users = User::limit($total)->get();
+
+        foreach ($users as $user) {
+            ProcessEmailJob::dispatch($user);
+        }
     }
 }

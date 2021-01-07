@@ -42,15 +42,20 @@ class AddWatermarkVideoJob implements ShouldQueue
             ->addWatermark(function(WatermarkFactory $watermark) {
                 $watermark->fromDisk('public')
                     ->open('logo.png')
-                    ->right(25)
-                    ->bottom(25);
+                    ->right(5)
+                    ->bottom(5);
             })
             ->addFilter(function (VideoFilters $filters) {
                 $filters->resize(new \FFMpeg\Coordinate\Dimension(960, 540));
             })
             ->export()
-            ->inFormat(new \FFMpeg\Format\Video\X264('libmp3lame','libx264'))
+            ->inFormat(new \FFMpeg\Format\Video\X264('libmp3lame', 'libx264'))
             ->toDisk('converted_videos')
-            ->save('xxxxx.mp4');
+            ->save('video_with_watermark'.uniqid().'.mp4');
+    }
+
+    public function tags()
+    {
+        return ['AddedWatermarkVideo'];
     }
 }

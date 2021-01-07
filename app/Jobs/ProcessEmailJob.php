@@ -19,16 +19,16 @@ class ProcessEmailJob implements ShouldQueue
     public $tries = 5;
     public $maxExceptions = 3;
     public $timeout = 120;
-    private $total;
+    private $user;
 
     /**
      * Create a new job instance.
      *
      * @param $total
      */
-    public function __construct($total)
+    public function __construct($user)
     {
-        $this->total = $total;
+        $this->user = $user;
     }
 
     /**
@@ -38,12 +38,9 @@ class ProcessEmailJob implements ShouldQueue
      */
     public function handle()
     {
-        $users = User::limit($this->total)->get();
-
-        foreach ($users as $user) {
-            Notification::route('mail',$user->email)
-                ->notify(new SendNotification());
-        }
+        $a=$b;
+        Notification::route('mail',$this->user->email)
+            ->notify(new SendNotification());
     }
 
     public function tags()

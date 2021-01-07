@@ -4,9 +4,6 @@ namespace App\Console\Commands;
 
 use App\Jobs\AddWatermarkVideoJob;
 use Illuminate\Console\Command;
-use FFMpeg\Filters\Video\VideoFilters;
-use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
-use ProtoneMedia\LaravelFFMpeg\Filters\WatermarkFactory;
 
 class AddWatermarkVideo extends Command
 {
@@ -15,14 +12,14 @@ class AddWatermarkVideo extends Command
      *
      * @var string
      */
-    protected $signature = 'videos:add-watermark';
+    protected $signature = 'videos:add-watermark {total}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Add watermark in video';
+    protected $description = 'Add watermark in video {total}';
 
     /**
      * Create a new command instance.
@@ -41,11 +38,10 @@ class AddWatermarkVideo extends Command
      */
     public function handle()
     {
-        AddWatermarkVideoJob::dispatch();
-    }
+        $total = ((int)$this->argument('total'));
 
-    public function tags()
-    {
-        return ['CovertVideo'];
+        for ($i=0;$i<$total;$i++){
+            AddWatermarkVideoJob::dispatch();
+        }
     }
 }
